@@ -1,0 +1,9 @@
+**/.DS_Store
+dist
+out
+.idea
+*.iml
+node_modules
+**/bower_components
+npm-debug.log
+public/css/*

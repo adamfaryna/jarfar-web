@@ -1,0 +1,12 @@
+{
+  "name": "<%= name %>",
+  "version": "0.0.0",
+  "authors": "Adam Faryna (https://github.com/adamfaryna)",
+  "description": "",
+  "license": "MIT",
+  "homepage": "https://github.com/adamfaryna",
+  "dependencies": {
+    "angular": "^1.5.0",
+    "angular-ui-router": "^0.2.18"
+  }
+}

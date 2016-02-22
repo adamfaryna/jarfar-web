@@ -1,0 +1,14 @@
+{
+  "name": "generator-jarfar-web",
+  "version": "1.0.0",
+  "description": "jarfar web",
+  "files": [
+  	"app"
+  ],
+  "author": "Adam Faryna (https://github.com/adamfaryna)",
+  "license": "MIT",
+  "keywords": ["yeoman-generator"],
+  "dependencies": {
+    "yeoman-generator": "^0.22.5"
+  }
+}
