@@ -11,6 +11,7 @@
   "boss": true,
   "eqnull": true,
   "node": true,
+  "esversion": 6,
   "globals": {
     "describe"   : false,
     "it"         : false,
@@ -19,9 +20,9 @@
     "after"      : false,
     "afterEach"  : false,
     "angular"    : false,
-    "$"          : true,
-    "jasmine"    : true,
-    "inject"     : true,
-    "expect"     : true
+    "$"          : false,
+    "jasmine"    : false,
+    "inject"     : false,
+    "expect"     : false
   }
 }
