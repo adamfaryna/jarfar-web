@@ -1,111 +1,97 @@
+'use strict';
+
 var generators = require('yeoman-generator');
+var mkdirp = require('mkdirp');
 
+debugger;
 module.exports = generators.Base.extend({
-	constructor: function () {
-		generators.Base.apply(this, arguments);
+  constructor: function () {
+    generators.Base.apply(this, arguments);
+  },
 
-		// this.option('coffee');
+  prompting: function () {
+    var done = this.async();
 
+    class Prompt {
+      constructor(type, name, message, def) {
+        this.type = type;
+        this.name = name;
+        this.message = message;
+        this.default = def;
+      }
+    }
 
-	},
+    var prompts = [
+      new Prompt('input', 'name', 'Your project name', this.appname),
+      new Prompt('input', 'title', 'Your project title', this.appname),
+      new Prompt('input', 'description', 'Your project description')
+    ];
 
-	prompting: function () {
-		var done = this.async();
+    this.prompt(prompts, (answers) => {
+      this.props = answers;
+      this.log(JSON.stringify(answers));
+      done();
+    });
+  },
 
-		this.prompt({
-			type: 'input',
-			name: 'name',
-			message: 'Your project name',
-			default: this.appname
-		}, function (answers) {
-			this.props = answers;
-			this.log(answers.name);
-			done();
-		}.bind(this));
-	},
+  writing: {
+    config: function () {
+      var that = this;
 
-	writing: {
-		config: function () {
-			this.fs.copyTpl(
-				this.templatePath('_package.json'),
-				this.destinationPath('package.json'), {
-					name: this.props.name
-				}
-			);
-			this.fs.copyTpl(
-				this.templatePath('_bower.json'),
-				this.destinationPath('bower.json'), {
-					name: this.props.name
-				}
-			);
-			this.fs.copy(
-				this.templatePath('_coffee/_src/_app/_components'),
-				this.destinationPath('coffee/src/app/components')
-			);
-			this.fs.copy(
-				this.templatePath('_coffee/_src/_app/_service'),
-				this.destinationPath('coffee/src/app/service')
-			);
-			this.fs.copy(
-				this.templatePath('_coffee/_src/_app/_app.coffee'),
-				this.destinationPath('coffee/src/app/app.coffee')
-			);
-			this.fs.copy(
-				this.templatePath('_coffee/_src/_app/_constans.coffee'),
-				this.destinationPath('coffee/src/app/constans.coffee')
-			);
-			this.fs.copy(
-				this.templatePath('_coffee/_test/_app/_components'),
-				this.destinationPath('coffee/test/app/components')
-			);
-			this.fs.copy(
-				this.templatePath('_coffee/_test/_app/_service'),
-				this.destinationPath('coffee/test/app/service')
-			);
-			this.fs.copy(
-				this.templatePath('_public/_css'),
-				this.destinationPath('public/css')
-			);
-			this.fs.copy(
-				this.templatePath('_public/_fonts'),
-				this.destinationPath('public/fonts')
-			);
-			this.fs.copy(
-				this.templatePath('_public/_images'),
-				this.destinationPath('public/images')
-			);
-			this.fs.copy(
-				this.templatePath('jshintrc'),
-				this.destinationPath('.jshintrc')
-			);
-			this.fs.copy(
-				this.templatePath('bowerrc'),
-				this.destinationPath('.bowerrc')
-			);
-			this.fs.copy(
-				this.templatePath('_gulpfile.js'),
-				this.destinationPath('gulpfile.js')
-			);
-			this.fs.copy(
-				this.templatePath('_karma.conf.js'),
-				this.destinationPath('karma.conf.js')
-			);
-			this.fs.copy(
-				this.templatePath('gitignore'),
-				this.destinationPath('.gitignore')
-			);
-			this.fs.copy(
-				this.templatePath('_LICENSE'),
-				this.destinationPath('LICENSE')
-			);
-			this.fs.copy(
-				this.templatePath('_README.md'),
-				this.destinationPath('README.md')
-			);
-		},
+      function copyDataCreator(templatePath, destinationPath, params) {
+        return [
+          that.templatePath(templatePath),
+          that.destinationPath(destinationPath),
+          params || {}
+        ];
+      }
 
-		install: function() {
-  		// this.installDependencies();
-		}
-	}
+      [
+        'src/app/components',
+        'src/app/service',
+        'test/app/components',
+        'test/app/service',
+        'public/css',
+        'public/fonts',
+        'public/images'
+      ].forEach((elem) => {
+        mkdirp.sync(elem);
+      });
+
+      [
+        copyDataCreator('_src/_app/_app.es6', 'src/app/app.es6'),
+        copyDataCreator('_src/_app/_config.es6', 'src/app/config.es6'),
+        copyDataCreator('_src/_app/_constans.es6', 'src/app/constans.es6'),
+        copyDataCreator('_less/_style.less', 'less/style.less'),
+        copyDataCreator('jshintrc', '.jshintrc'),
+        copyDataCreator('bowerrc', '.bowerrc'),
+        copyDataCreator('babelrc', '.babelrc'),
+        copyDataCreator('gitignore', '.gitignore'),
+        copyDataCreator('_gulpfile.js', 'gulpfile.js'),
+        copyDataCreator('_karma.conf.js', 'karma.conf.js'),
+        copyDataCreator('_LICENSE', 'LICENSE'),
+        copyDataCreator('_README.md', 'README.md'),
+      ].forEach((elem) => {
+        that.fs.copy(...elem);
+      });
+
+      [
+        copyDataCreator('_public/_index.html', 'public/index.html', {
+          title: this.props.title, description: this.props.description
+        }),
+        copyDataCreator('_package.json', 'package.json', {
+          name: this.props.name
+        }),
+        copyDataCreator('_bower.json', 'bower.json', {
+          name: this.props.name
+        })
+      ].forEach((elem) => {
+        that.fs.copyTpl(...elem);
+      });
+    },
+
+    install: function() {
+       this.installDependencies();
+    }
+  }
 });

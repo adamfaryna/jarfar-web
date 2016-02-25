@@ -4,7 +4,7 @@ var gulp         = require('gulp');
 var browserSync  = require('browser-sync').create();
 var $            = require('gulp-load-plugins')();
 
-gulp.task('lint', function() {
+gulp.task('lint', () => {
   return gulp.src(['public/app/**/*.js', 'test/**/*.js', 'gulpfile.js', 'karma.conf.js', '!/**/jquery.js'])
     .pipe($.jshint('.jshintrc'))
     .pipe($.jshint.reporter('jshint-stylish'))
@@ -12,7 +12,7 @@ gulp.task('lint', function() {
 });
 
 // Compile less into CSS & auto-inject into browsers
-gulp.task('less', function() {
+gulp.task('less', () => {
   return gulp.src('less/*.less')
     .pipe($.less())
     .pipe($.autoprefixer({
@@ -23,18 +23,19 @@ gulp.task('less', function() {
     .pipe(browserSync.stream());
 });
 
-gulp.task('coffee', function () {
-  return gulp.src('coffee/src/**/*.coffee', { base: 'coffee/src' })
+gulp.task('babel', () => {
+  return gulp.src('src/**/*.es6', { base: 'src' })
+    .pipe($.babel())
     .pipe(gulp.dest('./public/'))
     .pipe(browserSync.stream());
 });
 
-gulp.task('coffeeTest', function () {
-  return gulp.src('coffee/test/**/*.coffee', { base: 'coffee/test' })
+gulp.task('babelTest', () => {
+  return gulp.src('test/**/*.es6', { base: 'babel/test' })
     .pipe(gulp.dest('./test/'));
 });
 
-gulp.task('inject', function() {
+gulp.task('inject', () => {
   var inject_res = gulp.src(['./public/app/**/*.js', './public/css/**/*.css'], {read: false});
 
   return gulp.src('./public/index.html')
@@ -47,7 +48,7 @@ gulp.task('inject', function() {
 });
 
 // Static Server + watching files
-gulp.task('serve', ['less', 'coffee', 'lint', 'inject'], function() {
+gulp.task('serve', ['less', 'babel', 'lint', 'inject'], () => {
   browserSync.init({
     browser: ['firefox'],
     server: 'public/',
@@ -55,7 +56,7 @@ gulp.task('serve', ['less', 'coffee', 'lint', 'inject'], function() {
   });
 
   gulp.watch('./less/*.less', ['less']);
-  gulp.watch('./coffee/_src/**/*.coffee', ['coffee']);
+  gulp.watch('./src/**/*.es6', ['babel']);
   gulp.watch(['./public/**/*.*', '!./public/bower_components']).on('change', browserSync.reload);
 });
 

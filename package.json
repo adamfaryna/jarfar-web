@@ -3,12 +3,15 @@
   "version": "1.0.0",
   "description": "jarfar web",
   "files": [
-  	"app"
+    "app"
   ],
   "author": "Adam Faryna (https://github.com/adamfaryna)",
   "license": "MIT",
-  "keywords": ["yeoman-generator"],
+  "keywords": [
+    "yeoman-generator"
+  ],
   "dependencies": {
+    "mkdirp": "^0.5.1",
     "yeoman-generator": "^0.22.5"
   }
 }
