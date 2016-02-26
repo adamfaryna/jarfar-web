@@ -35,7 +35,7 @@ module.exports = generators.Base.extend({
   },
 
   writing: {
-    config: function () {
+    config: function() {
       var that = this;
 
       function copyDataCreator(templatePath, destinationPath, params) {
@@ -49,11 +49,11 @@ module.exports = generators.Base.extend({
       [
         'src/app/components',
         'src/app/service',
+        'src/fonts',
+        'src/images',
         'test/app/components',
         'test/app/service',
-        'public/css',
-        'public/fonts',
-        'public/images'
+        'public/css'
       ].forEach((elem) => {
         mkdirp.sync(elem);
       });
@@ -76,7 +76,7 @@ module.exports = generators.Base.extend({
       });
 
       [
-        copyDataCreator('_public/_index.html', 'public/index.html', {
+        copyDataCreator('_src/_index.html', 'src/index.html', {
           title: this.props.title, description: this.props.description
         }),
         copyDataCreator('_package.json', 'package.json', {
@@ -91,7 +91,7 @@ module.exports = generators.Base.extend({
     },
 
     install: function() {
-       this.installDependencies();
+       //this.installDependencies();
     }
   }
 });

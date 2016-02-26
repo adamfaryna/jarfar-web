@@ -20,7 +20,7 @@
     "after"      : false,
     "afterEach"  : false,
     "angular"    : false,
-    "$"          : false,
+    "$"          : true,
     "jasmine"    : false,
     "inject"     : false,
     "expect"     : false

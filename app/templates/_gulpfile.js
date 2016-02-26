@@ -47,8 +47,13 @@ gulp.task('inject', () => {
     .pipe(gulp.dest('./public'));
 });
 
+gulp.task('copyPartials', () => {
+  return gulp.src(['./src/**/*.html', './src/fonts/*.*', './src/images/*.*'], { base: 'src' })
+    .pipe(gulp.dest('./public/'));
+});
+
 // Static Server + watching files
-gulp.task('serve', ['less', 'babel', 'lint', 'inject'], () => {
+gulp.task('serve', ['less', 'babel', 'lint', 'copyPartials', 'inject'], () => {
   browserSync.init({
     browser: ['firefox'],
     server: 'public/',
@@ -57,6 +62,7 @@ gulp.task('serve', ['less', 'babel', 'lint', 'inject'], () => {
 
   gulp.watch('./less/*.less', ['less']);
   gulp.watch('./src/**/*.es6', ['babel']);
+  gulp.watch('./src/**/*.html', ['copyPartials']);
   gulp.watch(['./public/**/*.*', '!./public/bower_components']).on('change', browserSync.reload);
 });
 
